@@ -8,8 +8,6 @@ const Game = function () {
 
   const categories = [];
 
-  var isGettingOutOfPenaltyBox = false;
-
   var didPlayerWin = function () {
     return !(currentPlayer.purse == 6)
   };
@@ -53,7 +51,8 @@ const Game = function () {
     console.log(currentPlayer + " is the current player");
     console.log("They have rolled a " + roll);
 
-    if (hasPenalty(roll)) {
+    currentPlayer.hasPenalty = checkPenalty(roll);
+    if (currentPlayer.hasPenalty) {
       return;
     }
 
@@ -65,17 +64,17 @@ const Game = function () {
     askQuestion();
   };
 
-  const hasPenalty = function (roll) {
+  const checkPenalty = function (roll) {
     if (!currentPlayer.hasPenalty) {
       return false;
     }
 
-    const hasOddValue = Boolean(roll % 2);
-    isGettingOutOfPenaltyBox = hasOddValue;
-    if (!hasOddValue) {
+    const shouldLeavePenalty = Boolean(roll % 2);
+    if (!shouldLeavePenalty) {
       console.log(currentPlayer + " is not getting out of the penalty box");
       return true;
     }
+
     console.log(currentPlayer + " is getting out of the penalty box");
     return false;
   };
@@ -84,16 +83,7 @@ const Game = function () {
     currentPlayer.purse += 1;
 
     if (currentPlayer.hasPenalty) {
-      if (isGettingOutOfPenaltyBox) {
-        console.log('Answer was correct!!!!');
-        console.log(currentPlayer + " now has " +
-          currentPlayer.purse + " Gold Coins.");
-
-        var winner = didPlayerWin();
-        this.setNextPlayer();
-        return winner;
-      }
-
+      return true;
     }
 
     console.log("Answer was correct!!!!");
@@ -113,7 +103,6 @@ const Game = function () {
   };
 };
 
-var notAWinner = false;
 
 var game = new Game();
 
@@ -126,8 +115,9 @@ game.generateQuestions();
 players.forEach(c => game.addPlayer(new Player(c)));
 game.setNextPlayer();
 
-do {
+let notAWinner = true;
 
+while (notAWinner) {
   game.roll(Math.floor(Math.random() * 6) + 1);
 
   if (Math.floor(Math.random() * 10) == 7) {
@@ -136,6 +126,6 @@ do {
     notAWinner = game.wasCorrectlyAnswered();
   }
   game.setNextPlayer();
-} while (notAWinner);
+}
 
 module.exports = Game;
