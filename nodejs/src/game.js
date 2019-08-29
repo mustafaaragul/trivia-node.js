@@ -45,7 +45,7 @@ const Game = function () {
     console.log(currentPlayer + " is the current player");
     console.log("They have rolled a " + roll);
 
-    currentPlayer.hasPenalty = currentPlayer.hasPenalty && checkPenalty(roll);
+    currentPlayer.hasPenalty = currentPlayer.hasPenalty && this.checkPenalty(roll);
     if (currentPlayer.hasPenalty) {
       return;
     }
@@ -56,7 +56,7 @@ const Game = function () {
     console.log(currentPlayer + "'s new location is " + currentPlayer.place);
   };
 
-  const checkPenalty = function (roll) {
+  this.checkPenalty = function (roll) {
     const shouldLeavePenalty = Boolean(roll % 2);
     if (!shouldLeavePenalty) {
       console.log(currentPlayer + " is not getting out of the penalty box");
@@ -68,7 +68,7 @@ const Game = function () {
   };
 
   this.handleCorrectAnswer = function () {
-    currentPlayer.purse += 1;
+    currentPlayer.purse++;
 
     console.log("Answer was correct!!!!");
     console.log(currentPlayer + " now has " +

@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "mocha src/**/*.spec.js"
+    "test": "mocha test/**/*.spec.js"
   },
   "author": "",
   "license": "GPL v3",
   "dependencies": {},
   "devDependencies": {
+    "faker": "^4.1.0",
     "mocha": "^5.2.0",
     "should": "^13.2.1"
   }
