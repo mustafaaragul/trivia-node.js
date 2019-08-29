@@ -67,7 +67,7 @@ const Game = function () {
     return false;
   };
 
-  this.wasCorrectlyAnswered = function () {
+  this.handleCorrectAnswer = function () {
     currentPlayer.purse += 1;
 
     console.log("Answer was correct!!!!");
@@ -75,7 +75,7 @@ const Game = function () {
       currentPlayer.purse + " Gold Coins.");
   };
 
-  this.wrongAnswer = function () {
+  this.handleWrongAnswer = function () {
     console.log('Question was incorrectly answered');
     console.log(currentPlayer + " was sent to the penalty box");
     currentPlayer.hasPenalty = true;
@@ -100,11 +100,11 @@ const Game = function () {
     const answer = currentPlayer.answerQuestion();
     const isCorrect = this.checkAnswer(answer);
     if (!isCorrect) {
-      this.wrongAnswer();
+      this.handleWrongAnswer();
       return
     }
 
-    this.wasCorrectlyAnswered();
+    this.handleCorrectAnswer();
   }
 };
 
