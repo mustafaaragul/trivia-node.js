@@ -73,7 +73,7 @@ describe('compare old and refactored versions result', function () {
 
   it('should compare outputs of two games', function () {
     const oldGameBuff = readFileSync(oldGameFilepath);
-    const newGameBuff = readFileSync(oldGameFilepath);
+    const newGameBuff = readFileSync(gameFilepath);
 
     const isEqual = oldGameBuff.equals(newGameBuff);
     isEqual.should.be.true();
