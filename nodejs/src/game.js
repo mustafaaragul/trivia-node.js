@@ -1,15 +1,12 @@
 const Player = require('./player');
+const Category = require('./category');
 
 const Game = function () {
   const players = [];
   let currentPlayer;
   let currentPlayerIndex = -1;
 
-  var popQuestions = [];
-  var scienceQuestions = [];
-  var sportsQuestions = [];
-  var rockQuestions = [];
-
+  const categories = [];
 
   var isGettingOutOfPenaltyBox = false;
 
@@ -18,66 +15,37 @@ const Game = function () {
   };
 
   var currentCategory = function () {
-    if (currentPlayer.place == 0)
-      return 'Pop';
-    if (currentPlayer.place == 4)
-      return 'Pop';
-    if (currentPlayer.place == 8)
-      return 'Pop';
-    if (currentPlayer.place == 1)
-      return 'Science';
-    if (currentPlayer.place == 5)
-      return 'Science';
-    if (currentPlayer.place == 9)
-      return 'Science';
-    if (currentPlayer.place == 2)
-      return 'Sports';
-    if (currentPlayer.place == 6)
-      return 'Sports';
-    if (currentPlayer.place == 10)
-      return 'Sports';
-    return 'Rock';
+    const place = currentPlayer.place;
+    const categoryIndex = place % categories.length;
+    return categories[categoryIndex];
   };
 
-  this.createRockQuestion = function (index) {
-    return "Rock Question " + index;
+  this.generateQuestions = function (num = 50) {
+    for (let i = 0; i < 50; i++) {
+      categories.forEach(v => v.generateQuestion(i));
+    }
   };
-
-  for (var i = 0; i < 50; i++) {
-    popQuestions.push("Pop Question " + i);
-    scienceQuestions.push("Science Question " + i);
-    sportsQuestions.push("Sports Question " + i);
-    rockQuestions.push(this.createRockQuestion(i));
-  }
-  ;
 
   this.isPlayable = function (howManyPlayers) {
     return howManyPlayers >= 2;
   };
 
-  this.addPlayer = function (playerName) {
-    players.push(new Player(playerName));
+  this.addCategory = function (category) {
+    categories.push(category);
+  };
 
-    console.log(playerName + " was added");
+  this.addPlayer = function (player) {
+    players.push(player);
+
+    console.log(player + " was added");
     console.log("They are player number " + players.length);
-
     return true;
   };
 
-  this.howManyPlayers = function () {
-    return players.length;
-  };
-
-
   var askQuestion = function () {
-    if (currentCategory() == 'Pop')
-      console.log(popQuestions.shift());
-    if (currentCategory() == 'Science')
-      console.log(scienceQuestions.shift());
-    if (currentCategory() == 'Sports')
-      console.log(sportsQuestions.shift());
-    if (currentCategory() == 'Rock')
-      console.log(rockQuestions.shift());
+    const category = currentCategory();
+    const shifted = category.questions.shift();
+    console.log(shifted);
   };
 
   this.setNextPlayer = function () {
@@ -164,9 +132,13 @@ var notAWinner = false;
 
 var game = new Game();
 
-game.addPlayer('Chet');
-game.addPlayer('Pat');
-game.addPlayer('Sue');
+const categories = ['Pop', 'Science', 'Sports', 'Rock'];
+const players = ['Chet', 'Pat', 'Sue'];
+
+categories.forEach(c => game.addCategory(new Category(c)));
+game.generateQuestions();
+
+players.forEach(c => game.addPlayer(new Player(c)));
 game.setNextPlayer();
 
 do {
