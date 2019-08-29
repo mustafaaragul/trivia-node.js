@@ -2,8 +2,9 @@
   "name": "trivia",
   "version": "1.0.0",
   "description": "Test with node.js =====================",
-  "main": "game.js",
+  "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "mocha src/**/*.spec.js"
   },
   "author": "",
