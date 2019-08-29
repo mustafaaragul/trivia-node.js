@@ -21,13 +21,9 @@ const Game = function () {
   };
 
   this.generateQuestions = function (num = 50) {
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < num; i++) {
       categories.forEach(v => v.generateQuestion(i));
     }
-  };
-
-  this.isPlayable = function (howManyPlayers) {
-    return howManyPlayers >= 2;
   };
 
   this.addCategory = function (category) {
@@ -49,11 +45,7 @@ const Game = function () {
   };
 
   this.setNextPlayer = function () {
-    currentPlayerIndex += 1;
-    if (currentPlayerIndex === players.length) {
-      currentPlayerIndex = 0;
-    }
-
+    currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
     currentPlayer = players[currentPlayerIndex];
   };
 
@@ -61,34 +53,31 @@ const Game = function () {
     console.log(currentPlayer + " is the current player");
     console.log("They have rolled a " + roll);
 
-    if (currentPlayer.hasPenalty) {
-      if (roll % 2 != 0) {
-        isGettingOutOfPenaltyBox = true;
-
-        console.log(currentPlayer + " is getting out of the penalty box");
-        currentPlayer.place += roll;
-        if (currentPlayer.place > 11) {
-          currentPlayer.place = currentPlayer.place - 12;
-        }
-
-        console.log(currentPlayer + "'s new location is " + currentPlayer.place);
-        console.log("The category is " + currentCategory());
-        askQuestion();
-      } else {
-        console.log(players[currentPlayer] + " is not getting out of the penalty box");
-        isGettingOutOfPenaltyBox = false;
-      }
-    } else {
-
-      currentPlayer.place = currentPlayer.place + roll;
-      if (currentPlayer.place > 11) {
-        currentPlayer.place = currentPlayer.place - 12;
-      }
-
-      console.log(currentPlayer + "'s new location is " + currentPlayer.place);
-      console.log("The category is " + currentCategory());
-      askQuestion();
+    if (hasPenalty(roll)) {
+      return;
     }
+
+    const place = currentPlayer.place;
+    currentPlayer.place = (place + roll) % 12;
+
+    console.log(currentPlayer + "'s new location is " + currentPlayer.place);
+    console.log("The category is " + currentCategory());
+    askQuestion();
+  };
+
+  const hasPenalty = function (roll) {
+    if (!currentPlayer.hasPenalty) {
+      return false;
+    }
+
+    const hasOddValue = Boolean(roll % 2);
+    isGettingOutOfPenaltyBox = hasOddValue;
+    if (!hasOddValue) {
+      console.log(currentPlayer + " is not getting out of the penalty box");
+      return true;
+    }
+    console.log(currentPlayer + " is getting out of the penalty box");
+    return false;
   };
 
   this.wasCorrectlyAnswered = function () {
@@ -104,8 +93,6 @@ const Game = function () {
         this.setNextPlayer();
         return winner;
       }
-      this.setNextPlayer();
-      return true;
 
     }
 
@@ -122,8 +109,6 @@ const Game = function () {
     console.log('Question was incorrectly answered');
     console.log(currentPlayer + " was sent to the penalty box");
     currentPlayer.hasPenalty = true;
-
-    this.setNextPlayer();
     return true;
   };
 };
@@ -150,7 +135,7 @@ do {
   } else {
     notAWinner = game.wasCorrectlyAnswered();
   }
-
+  game.setNextPlayer();
 } while (notAWinner);
 
 module.exports = Game;
