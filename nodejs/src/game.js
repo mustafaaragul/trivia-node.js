@@ -80,11 +80,11 @@ const Game = function () {
   };
 
   this.wasCorrectlyAnswered = function () {
-    currentPlayer.purse += 1;
-
     if (currentPlayer.hasPenalty) {
       return true;
     }
+
+    currentPlayer.purse += 1;
 
     console.log("Answer was correct!!!!");
     console.log(currentPlayer + " now has " +
@@ -116,7 +116,6 @@ players.forEach(c => game.addPlayer(new Player(c)));
 game.setNextPlayer();
 
 let notAWinner = true;
-
 while (notAWinner) {
   game.roll(Math.floor(Math.random() * 6) + 1);
 
