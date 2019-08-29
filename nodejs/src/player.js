@@ -5,6 +5,10 @@ function Player(name) {
   this.hasPenalty = false;
 }
 
+Player.prototype.answerQuestion = function() {
+  return Math.floor(Math.random() * 10);
+};
+
 Player.prototype.toString = function () {
   return this.name;
 };

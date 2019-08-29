@@ -42,9 +42,10 @@ const Game = function () {
     console.log(shifted);
   };
 
-  this.setNextPlayer = function () {
+  this.chooseNextPlayer = function () {
     currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
     currentPlayer = players[currentPlayerIndex];
+    return currentPlayer;
   };
 
   this.roll = function (roll) {
@@ -91,7 +92,7 @@ const Game = function () {
       currentPlayer.purse + " Gold Coins.");
 
     const winner = didPlayerWin();
-    this.setNextPlayer();
+    this.chooseNextPlayer();
     return winner;
   };
 
@@ -113,18 +114,17 @@ categories.forEach(c => game.addCategory(new Category(c)));
 game.generateQuestions();
 
 players.forEach(c => game.addPlayer(new Player(c)));
-game.setNextPlayer();
 
 let notAWinner = true;
 while (notAWinner) {
+  const player = game.chooseNextPlayer();
   game.roll(Math.floor(Math.random() * 6) + 1);
-
-  if (Math.floor(Math.random() * 10) == 7) {
+  const answer = player.answerQuestion();
+  if (answer === 7) {
     notAWinner = game.wrongAnswer();
   } else {
     notAWinner = game.wasCorrectlyAnswered();
   }
-  game.setNextPlayer();
 }
 
 module.exports = Game;
