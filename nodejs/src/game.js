@@ -91,9 +91,7 @@ const Game = function () {
     console.log(currentPlayer + " now has " +
       currentPlayer.purse + " Gold Coins.");
 
-    const winner = didPlayerWin();
-    this.chooseNextPlayer();
-    return winner;
+    return didPlayerWin();
   };
 
   this.wrongAnswer = function () {
