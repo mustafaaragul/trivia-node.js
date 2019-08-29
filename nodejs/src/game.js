@@ -28,7 +28,9 @@ const Game = function () {
     console.log("They are player number " + players.length);
   };
 
-  const askQuestion = function (category) {
+  const askQuestion = function () {
+    const category = currentCategory();
+    console.log("The category is " + category);
     const shifted = category.questions.shift();
     console.log(shifted);
   };
@@ -39,13 +41,11 @@ const Game = function () {
     return currentPlayer;
   };
 
-  this.roll = function () {
+  this.handleRoll = function (roll) {
     console.log(currentPlayer + " is the current player");
-
-    const roll = currentPlayer.roll();
     console.log("They have rolled a " + roll);
 
-    currentPlayer.hasPenalty = checkPenalty(roll);
+    currentPlayer.hasPenalty = currentPlayer.hasPenalty && checkPenalty(roll);
     if (currentPlayer.hasPenalty) {
       return;
     }
@@ -53,18 +53,10 @@ const Game = function () {
     const place = currentPlayer.place;
     currentPlayer.place = (place + roll) % 12;
 
-    const category = currentCategory();
     console.log(currentPlayer + "'s new location is " + currentPlayer.place);
-    console.log("The category is " + category);
-
-    askQuestion(category);
   };
 
   const checkPenalty = function (roll) {
-    if (!currentPlayer.hasPenalty) {
-      return false;
-    }
-
     const shouldLeavePenalty = Boolean(roll % 2);
     if (!shouldLeavePenalty) {
       console.log(currentPlayer + " is not getting out of the penalty box");
@@ -76,10 +68,6 @@ const Game = function () {
   };
 
   this.wasCorrectlyAnswered = function () {
-    if (currentPlayer.hasPenalty) {
-      return true;
-    }
-
     currentPlayer.purse += 1;
 
     console.log("Answer was correct!!!!");
@@ -91,7 +79,6 @@ const Game = function () {
     console.log('Question was incorrectly answered');
     console.log(currentPlayer + " was sent to the penalty box");
     currentPlayer.hasPenalty = true;
-    return true;
   };
 
   this.hasPlayerWin = function () {
@@ -103,10 +90,15 @@ const Game = function () {
   };
 
   this.doStep = function () {
-    this.roll();
+    const roll = currentPlayer.roll();
+    this.handleRoll(roll);
+    if (currentPlayer.hasPenalty) {
+      return;
+    }
+
+    askQuestion();
     const answer = currentPlayer.answerQuestion();
     const isCorrect = this.checkAnswer(answer);
-
     if (!isCorrect) {
       this.wrongAnswer();
       return
