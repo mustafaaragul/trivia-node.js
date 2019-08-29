@@ -1,7 +1,7 @@
 const Game = function () {
+  let currentPlayer;
   const players = [];
   let currentPlayerIndex = -1;
-  let currentPlayer;
 
   const categories = [];
 
@@ -95,12 +95,25 @@ const Game = function () {
   };
 
   this.hasPlayerWin = function () {
-    return currentPlayer.purse !== 6;
+    return currentPlayer.purse === 6;
   };
 
   this.checkAnswer = function (answer) {
     return (answer !== 7)
   };
+
+  this.doStep = function () {
+    this.roll();
+    const answer = currentPlayer.answerQuestion();
+    const isCorrect = this.checkAnswer(answer);
+
+    if (!isCorrect) {
+      this.wrongAnswer();
+      return
+    }
+
+    this.wasCorrectlyAnswered();
+  }
 };
 
 module.exports = Game;
