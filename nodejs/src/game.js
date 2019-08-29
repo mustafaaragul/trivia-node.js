@@ -8,11 +8,11 @@ const Game = function () {
 
   const categories = [];
 
-  var didPlayerWin = function () {
-    return !(currentPlayer.purse == 6)
+  const didPlayerWin = function () {
+    return currentPlayer.purse !== 6;
   };
 
-  var currentCategory = function () {
+  const currentCategory = function () {
     const place = currentPlayer.place;
     const categoryIndex = place % categories.length;
     return categories[categoryIndex];
@@ -36,7 +36,7 @@ const Game = function () {
     return true;
   };
 
-  var askQuestion = function () {
+  const askQuestion = function () {
     const category = currentCategory();
     const shifted = category.questions.shift();
     console.log(shifted);
@@ -90,7 +90,7 @@ const Game = function () {
     console.log(currentPlayer + " now has " +
       currentPlayer.purse + " Gold Coins.");
 
-    var winner = didPlayerWin();
+    const winner = didPlayerWin();
     this.setNextPlayer();
     return winner;
   };
@@ -104,7 +104,7 @@ const Game = function () {
 };
 
 
-var game = new Game();
+const game = new Game();
 
 const categories = ['Pop', 'Science', 'Sports', 'Rock'];
 const players = ['Chet', 'Pat', 'Sue'];
