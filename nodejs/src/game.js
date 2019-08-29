@@ -99,12 +99,11 @@ const Game = function () {
     askQuestion();
     const answer = currentPlayer.answerQuestion();
     const isCorrect = this.checkAnswer(answer);
-    if (!isCorrect) {
+    if (isCorrect) {
+      this.handleCorrectAnswer();
+    } else {
       this.handleWrongAnswer();
-      return
     }
-
-    this.handleCorrectAnswer();
   }
 };
 

@@ -12,9 +12,9 @@ game.generateQuestions();
 
 players.forEach(c => game.addPlayer(new Player(c)));
 
-let notAWinner = true;
-while (notAWinner) {
+let isWinner = true;
+do {
   game.chooseNextPlayer();
   game.doStep();
-  notAWinner = !game.hasPlayerWin();
-}
+  isWinner = game.hasPlayerWin();
+} while (!isWinner);
