@@ -1,14 +1,9 @@
-
 const Game = function () {
   const players = [];
-  let currentPlayer;
   let currentPlayerIndex = -1;
+  let currentPlayer;
 
   const categories = [];
-
-  const didPlayerWin = function () {
-    return currentPlayer.purse !== 6;
-  };
 
   const currentCategory = function () {
     const place = currentPlayer.place;
@@ -31,11 +26,9 @@ const Game = function () {
 
     console.log(player + " was added");
     console.log("They are player number " + players.length);
-    return true;
   };
 
-  const askQuestion = function () {
-    const category = currentCategory();
+  const askQuestion = function (category) {
     const shifted = category.questions.shift();
     console.log(shifted);
   };
@@ -46,8 +39,10 @@ const Game = function () {
     return currentPlayer;
   };
 
-  this.roll = function (roll) {
+  this.roll = function () {
     console.log(currentPlayer + " is the current player");
+
+    const roll = currentPlayer.roll();
     console.log("They have rolled a " + roll);
 
     currentPlayer.hasPenalty = checkPenalty(roll);
@@ -58,9 +53,11 @@ const Game = function () {
     const place = currentPlayer.place;
     currentPlayer.place = (place + roll) % 12;
 
+    const category = currentCategory();
     console.log(currentPlayer + "'s new location is " + currentPlayer.place);
-    console.log("The category is " + currentCategory());
-    askQuestion();
+    console.log("The category is " + category);
+
+    askQuestion(category);
   };
 
   const checkPenalty = function (roll) {
@@ -88,8 +85,6 @@ const Game = function () {
     console.log("Answer was correct!!!!");
     console.log(currentPlayer + " now has " +
       currentPlayer.purse + " Gold Coins.");
-
-    return didPlayerWin();
   };
 
   this.wrongAnswer = function () {
@@ -98,8 +93,14 @@ const Game = function () {
     currentPlayer.hasPenalty = true;
     return true;
   };
+
+  this.hasPlayerWin = function () {
+    return currentPlayer.purse !== 6;
+  };
+
+  this.checkAnswer = function (answer) {
+    return (answer !== 7)
+  };
 };
-
-
 
 module.exports = Game;

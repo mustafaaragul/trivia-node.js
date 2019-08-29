@@ -9,6 +9,10 @@ Player.prototype.answerQuestion = function() {
   return Math.floor(Math.random() * 10);
 };
 
+Player.prototype.roll = function() {
+  return Math.floor(Math.random() * 6) + 1;
+};
+
 Player.prototype.toString = function () {
   return this.name;
 };
